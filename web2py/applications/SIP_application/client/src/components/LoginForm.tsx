@@ -18,23 +18,25 @@ const LoginForm: React.FC = () => {
   };
 
   return (
-    <form onSubmit={handleSubmit} className="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4">
-      <div className="mb-4">
-        <label className="block text-gray-700 text-sm font-bold mb-2">
-          Username:
-        </label>
-        <input type="text" value={username} onChange={handleUsernameChange} className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-900 leading-tight focus:outline-none focus:shadow-outline" />
+    <main className="h-screen flex items-center justify-center">
+      <div className='bg-gradient-to-b from-black from-75% to-violet-900 hover:duration-200 grid justify-items-center rounded-3xl py-6 md:py-5 shadow-md shadow-purple-600 border-[1px] hover:shadow-violet-500 hover:shadow-lg border-purple-950'>
+        <h2 className="text-2xl m-1 md:m-0 font-bold hover:drop-shadow-[0_0_0.3rem_#ffffff70] text-gray-200 hover:duration-300 text-center duration-400">Sign In</h2>
+        <form noValidate onSubmit={handleSubmit} className="space-y-2 md:space-y-1">
+          <div className="text-sm">
+            <label htmlFor="username" className="block">Email</label>
+            <input type="text" name="Email" id="Email" placeholder="Email" value={username} onChange={handleUsernameChange} className="w-full md:h-full md:text-[15px] px-4 py-2 md:py-1 rounded-md border-gray-700 focus:border-transparent bg-black" />
+          </div>
+          <div className="text-sm">
+            <label htmlFor="password" className="block">Password</label>
+            <input type="password" name="password" id="password" placeholder="Password" value={password} onChange={handlePasswordChange} className="w-full md:h-full md:text-[15px] px-4 py-2 md:py-1 rounded-md border-gray-700 bg-black text-white focus:border-transparent" />
+            <div className="flex justify-end py-1 hover:drop-shadow-[0_0_0.4rem_#ffffff70] text-xs text-gray-300">
+              <a rel="noopener noreferrer" href="#">Forgot Password?</a>
+            </div>
+          </div>
+          <button type="submit" className="block w-full hover:drop-shadow-[0_0_0.1rem_#ffffff70] duration-400 p-2 md:p-1 text-center text-gray-300 md:text-[15px] hover:text-white border border-purple-400 shadow shadow-purple-950 hover:duration-300 hover:shadow-inner hover:shadow-purple-700 rounded-full">Sign in</button>
+        </form>
       </div>
-      <div className="mb-6">
-        <label className="block text-gray-700 text-sm font-bold mb-2">
-          Password:
-        </label>
-        <input type="password" value={password} onChange={handlePasswordChange} className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" />
-      </div>
-      <div className="flex items-center justify-between">
-        <input type="submit" value="Log In" className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline" />
-      </div>
-    </form>
+    </main>
   );
 };
 
