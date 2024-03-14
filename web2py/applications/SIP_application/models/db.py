@@ -153,3 +153,32 @@ if configuration.get('scheduler.enabled'):
 # after defining tables, uncomment below to enable auditing
 # -------------------------------------------------------------------------
 # auth.enable_record_versioning(db)
+
+# students
+db.define_table('students',
+    Field('name', 'string', requires=IS_NOT_EMPTY()),
+    Field('email', 'string', requires=[IS_EMAIL(), IS_NOT_IN_DB(db, 'students.email')]),
+    migrate=True
+)
+
+# classrooms
+db.define_table('classrooms',
+    Field('name', 'string', requires=IS_NOT_EMPTY()),
+    migrate=True
+)
+
+# subjects
+db.define_table('subjects',
+    Field('name', 'string', requires=IS_NOT_EMPTY()),
+    migrate=True
+)
+
+# attendance
+db.define_table('attendance',
+    Field('student_id', 'reference students'),
+    Field('classroom_id', 'reference classrooms'),
+    Field('subject_id', 'reference subjects'),
+    Field('attendance_date', 'date'),
+    Field('status', 'string', requires=IS_IN_SET(['Asistió', 'Ausente'])),
+    migrate=True
+)
