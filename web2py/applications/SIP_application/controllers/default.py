@@ -8,7 +8,9 @@ import os
 
 # ---- example index page ----
 def index():
-    return response.stream(os.path.join(request.folder, 'static', 'build', 'index.html'))
+    response.flash = T("SIP")
+    return dict(message=T('SIP'))
+
 
 # ---- API (example) -----
 @auth.requires_login()
