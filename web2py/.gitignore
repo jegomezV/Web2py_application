@@ -25,7 +25,6 @@ httpserver.pid
 # Python compiled files
 *.pyc
 *.pyo
-__pycache__/
 
 # web2py generated files
 applications/*/sessions/*
@@ -40,6 +39,16 @@ parameters_8000.py
 /scripts/
 /handlers/
 /site-packages/
+/__pycache__/
+/admin/
+/examples/
+/welcome/
+/private/
+/sessions/
+/languages/
+/cron/
+/errors/
+/views/
 
 CHANGELOG
 LICENSE
@@ -48,3 +57,5 @@ VERSION
 anyserver.py
 fabfile.py
 welcome.w2p
+__init__.py
+routes.example.py
