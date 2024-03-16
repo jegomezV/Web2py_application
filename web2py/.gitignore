@@ -34,3 +34,17 @@ applications/*/cache/*
 
 # Sensitive configuration files
 parameters_8000.py
+
+/examples/
+/extras/
+/scripts/
+/handlers/
+/site-packages/
+
+CHANGELOG
+LICENSE
+MANIFEST.in
+VERSION
+anyserver.py
+fabfile.py
+welcome.w2p
