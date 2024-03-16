@@ -154,31 +154,32 @@ if configuration.get('scheduler.enabled'):
 # -------------------------------------------------------------------------
 # auth.enable_record_versioning(db)
 
-# students
+# Students table
 db.define_table('students',
     Field('name', 'string', requires=IS_NOT_EMPTY()),
     Field('email', 'string', requires=[IS_EMAIL(), IS_NOT_IN_DB(db, 'students.email')]),
     migrate=True
 )
 
-# classrooms
+# Classrooms table
 db.define_table('classrooms',
     Field('name', 'string', requires=IS_NOT_EMPTY()),
     migrate=True
 )
 
-# subjects
+# Subjects table
 db.define_table('subjects',
     Field('name', 'string', requires=IS_NOT_EMPTY()),
     migrate=True
 )
 
-# attendance
-db.define_table('attendance',
-    Field('student_id', 'reference students'),
-    Field('classroom_id', 'reference classrooms'),
-    Field('subject_id', 'reference subjects'),
-    Field('attendance_date', 'date'),
-    Field('status', 'string', requires=IS_IN_SET(['Asistió', 'Ausente'])),
-    migrate=True
-)
+# Attendance table
+def assign_student_to_subject_and_classroom(student_id, subject_id, classroom_id, now):
+    db.attendance.insert(
+        student_id=student_id,
+        classroom_id=classroom_id,
+        subject_id=subject_id,
+        attendance_date=now,
+        status='Attended'
+    )
+    db.commit()

@@ -1,16 +1,63 @@
+// Import React and useState hook
 import React, { useState } from 'react';
 
-function StudentRegister() {
-    const [username, setUsername] = useState('');
-    const [password, setPassword] = useState('');
-    const [email, setEmail] = useState('');
+// Define an interface for the Student
+interface Student {
+    name: string;
+    email: string;
+}
 
-    const handleSubmit = (event: React.FormEvent) => {
+// Define the StudentRegister component
+const StudentRegister = () => {
+    // Use the useState hook to manage the student state
+    const [student, setStudent] = useState<Student>({ name: '', email: '' });
+
+    // Define the handleSubmit function
+    const handleSubmit = async (event: React.FormEvent) => {
         event.preventDefault();
-        // Aquí puedes manejar la lógica de registro
-        // Por ejemplo, puedes hacer una solicitud HTTP a tu servidor
-    }
 
+        // Validation for empty fields
+        if (!student.name || !student.email) {
+            alert('Please fill in all fields');
+            return;
+        }
+
+        // Additional validation for the username
+        if (student.name.length < 3) {
+            alert('The username must be at least 3 characters long');
+            return;
+        }
+
+        // Additional validation for the email
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!emailRegex.test(student.email)) {
+            alert('Please enter a valid email');
+            return;
+        }
+
+        try {
+            // Send the HTTP request to the backend
+            await fetch('http://127.0.0.1:8000/SIP_application/students/register', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(student)
+            });
+
+            // Here you can handle the server response
+        } catch (error) {
+            console.error('Error:', error);
+        }
+    };
+
+    // Define the handleInputChange function
+    const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        const { name, value } = event.target;
+        setStudent({ ...student, [name]: value });
+    };
+
+    // Render the component
     return (
         <main className="h-screen flex flex-col items-center justify-center">
             <h2 className="text-4xl mb-4 md:mb-6 font-bold hover:drop-shadow-[0_0_0.3rem_#ffffff70] text-gray-200 hover:duration-300 text-center duration-400">Student Register</h2>
@@ -19,11 +66,11 @@ function StudentRegister() {
                     <div className="text-sm mb-2">
                         <label>
                             Student name:
-                            <input type="text" value={username} onChange={e => setUsername(e.target.value)} className="block w-full mt-4 hover:drop-shadow-[0_0_0.1rem_#ffffff70] duration-400 p-2 md:p-1 text-center text-gray-300 md:text-[15px] hover:text-white border border-purple-400 shadow shadow-purple-950 hover:duration-300 hover:shadow-inner hover:shadow-purple-700 rounded-full" />
+                            <input type="text" name="name" value={student.name} onChange={handleInputChange} className="block w-full mt-4 hover:drop-shadow-[0_0_0.1rem_#ffffff70] duration-400 p-2 md:p-1 text-center text-gray-300 md:text-[15px] hover:text-white border border-purple-400 shadow shadow-purple-950 hover:duration-300 hover:shadow-inner hover:shadow-purple-700 rounded-full" required />
                         </label>
                         <label>
                             Email:
-                            <input type="email" value={email} onChange={e => setEmail(e.target.value)} className="block w-full mt-4 hover:drop-shadow-[0_0_0.1rem_#ffffff70] duration-400 p-2 md:p-1 text-center text-gray-300 md:text-[15px] hover:text-white border border-purple-400 shadow shadow-purple-950 hover:duration-300 hover:shadow-inner hover:shadow-purple-700 rounded-full" />
+                            <input type="email" name="email" value={student.email} onChange={handleInputChange} className="block w-full mt-4 hover:drop-shadow-[0_0_0.1rem_#ffffff70] duration-400 p-2 md:p-1 text-center text-gray-300 md:text-[15px] hover:text-white border border-purple-400 shadow shadow-purple-950 hover:duration-300 hover:shadow-inner hover:shadow-purple-700 rounded-full" required />
                         </label>
                     </div>
                     <button type="submit" className="block w-full mt-4 hover:drop-shadow-[0_0_0.1rem_#ffffff70] duration-400 p-2 md:p-1 text-center text-gray-300 md:text-[15px] hover:text-white border border-purple-400 shadow shadow-purple-950 hover:duration-300 hover:shadow-inner hover:shadow-purple-700 rounded-full">Register</button>
@@ -33,4 +80,5 @@ function StudentRegister() {
     );
 };
 
+// Export the StudentRegister component
 export default StudentRegister;
