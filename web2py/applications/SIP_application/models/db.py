@@ -155,25 +155,38 @@ if configuration.get('scheduler.enabled'):
 # auth.enable_record_versioning(db)
 
 # Students table
-db.define_table('students',
-    Field('name', 'string', requires=IS_NOT_EMPTY()),
-    Field('email', 'string', requires=[IS_EMAIL(), IS_NOT_IN_DB(db, 'students.email')]),
-    migrate=True
-)
+if 'students' not in db.tables:
+    db.define_table('students',
+        Field('name', 'string', requires=IS_NOT_EMPTY()),
+        Field('email', 'string', requires=[IS_EMAIL(), IS_NOT_IN_DB(db, 'students.email')]),
+        migrate=True
+    )
 
 # Classrooms table
-db.define_table('classrooms',
-    Field('name', 'string', requires=IS_NOT_EMPTY()),
-    migrate=True
-)
+if 'classrooms' not in db.tables:
+    db.define_table('classrooms',
+        Field('name', 'string', requires=IS_NOT_EMPTY()),
+        migrate=True
+    )
 
 # Subjects table
-db.define_table('subjects',
-    Field('name', 'string', requires=IS_NOT_EMPTY()),
-    migrate=True
-)
+if 'subjects' not in db.tables:
+    db.define_table('subjects',
+        Field('name', 'string', requires=IS_NOT_EMPTY()),
+        migrate=True
+    )
 
 # Attendance table
+if 'attendance' not in db.tables:
+    db.define_table('attendance',
+        Field('student_id', 'reference students'),
+        Field('classroom_id', 'reference classrooms'),
+        Field('subject_id', 'reference subjects'),
+        Field('attendance_date', 'datetime'),
+        Field('status', 'string'),
+        migrate=True
+    )
+
 def assign_student_to_subject_and_classroom(student_id, subject_id, classroom_id, now):
     db.attendance.insert(
         student_id=student_id,
