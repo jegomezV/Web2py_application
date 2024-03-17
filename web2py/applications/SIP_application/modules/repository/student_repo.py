@@ -1,4 +1,5 @@
-from typing import Optional, List
+from typing import Optional, List, Dict
+from gluon import HTTP
 
 class StudentRepository:
     """
@@ -33,18 +34,23 @@ class StudentRepository:
             raise ValueError(f"No student found with id {student_id}")
         return student
 
-    def create_student(self, name: str, email: str) -> dict:
+    def create_student_repo(self, student: Dict[str, str]):
         """
         Creates a new student in the 'students' collection.
 
-        :param name: A string representing the student's name.
-        :param email: A string representing the student's email.
+        :param student: A dictionary representing the student.
         :return: A dictionary representing the created student.
-        :raises ValueError: If either 'name' or 'email' is empty.
+        :raises ValueError: If either 'name' or 'email' is empty or if the email already exists in the database.
         """
-        if not name or not email:
+        if not student['name'] or not student['email']:
+            print("Name or email is empty")
             raise ValueError("Both name and email are required")
-        return self.db.students.insert(name=name, email=email)
+
+        # Check if a student with this email already exists in the database
+        if self.student_exists(student['email']):
+            raise HTTP(400, "A student with this email already exists")
+
+        return self.db.students.insert(name=student['name'], email=student['email'])
 
     def update_student(self, student_id: int, name: str, email: str) -> Optional[dict]:
         """
@@ -68,3 +74,14 @@ class StudentRepository:
         :return: True if the deletion was successful, False otherwise.
         """
         return self.db.students(student_id).delete_record()
+
+    def student_exists(self, email: str) -> bool:
+        """
+        Checks if a student with the given email exists in the 'students' collection.
+
+        :param email: A string representing the student's email.
+        :return: True if a student with the given email exists, False otherwise.
+        """
+        query = (self.db.students.email == email)
+        results = self.db(query).select()
+        return len(results) > 0

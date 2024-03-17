@@ -8,15 +8,6 @@ class StudentFactory:
         db: A database connection object.
     """
 
-    def __init__(self, db: object) -> None:
-        """
-        The constructor for StudentFactory class.
-
-        Parameters:
-            db (object): A database connection object.
-        """
-        self.db = db
-
     def create_student(self, name: str, email: str) -> Dict[str, str]:
         """
         The function to create a student.
@@ -29,4 +20,4 @@ class StudentFactory:
             dict: A dictionary containing the name and email of the student.
         """
         # Here you can add any additional logic you need for creating a student
-        return self.db.students.insert(name=name, email=email)
+        return {"name": name, "email": email}
