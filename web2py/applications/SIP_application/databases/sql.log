@@ -1,0 +1,298 @@
+timestamp: 2024-03-05T08:01:58.849245
+CREATE TABLE "auth_user"(
+    "id" INTEGER PRIMARY KEY AUTOINCREMENT,
+    "first_name" CHAR(128),
+    "last_name" CHAR(128),
+    "email" CHAR(512),
+    "password" CHAR(512),
+    "registration_key" CHAR(512),
+    "reset_password_key" CHAR(512),
+    "registration_id" CHAR(512)
+);
+success!
+timestamp: 2024-03-05T08:01:58.871487
+CREATE TABLE "auth_group"(
+    "id" INTEGER PRIMARY KEY AUTOINCREMENT,
+    "role" CHAR(512),
+    "description" TEXT
+);
+success!
+timestamp: 2024-03-05T08:01:58.888654
+CREATE TABLE "auth_membership"(
+    "id" INTEGER PRIMARY KEY AUTOINCREMENT,
+    "user_id" INTEGER REFERENCES "auth_user" ("id") ON DELETE CASCADE ON UPDATE CASCADE  ,
+    "group_id" INTEGER REFERENCES "auth_group" ("id") ON DELETE CASCADE ON UPDATE CASCADE  
+);
+success!
+timestamp: 2024-03-05T08:01:58.900776
+CREATE TABLE "auth_permission"(
+    "id" INTEGER PRIMARY KEY AUTOINCREMENT,
+    "group_id" INTEGER REFERENCES "auth_group" ("id") ON DELETE CASCADE ON UPDATE CASCADE  ,
+    "name" CHAR(512),
+    "table_name" CHAR(512),
+    "record_id" INTEGER
+);
+success!
+timestamp: 2024-03-05T08:01:58.913986
+CREATE TABLE "auth_event"(
+    "id" INTEGER PRIMARY KEY AUTOINCREMENT,
+    "time_stamp" TIMESTAMP,
+    "client_ip" CHAR(512),
+    "user_id" INTEGER REFERENCES "auth_user" ("id") ON DELETE CASCADE ON UPDATE CASCADE  ,
+    "origin" CHAR(512),
+    "description" TEXT
+);
+success!
+timestamp: 2024-03-05T08:01:58.931075
+CREATE TABLE "auth_cas"(
+    "id" INTEGER PRIMARY KEY AUTOINCREMENT,
+    "user_id" INTEGER REFERENCES "auth_user" ("id") ON DELETE CASCADE ON UPDATE CASCADE  ,
+    "created_on" TIMESTAMP,
+    "service" CHAR(512),
+    "ticket" CHAR(512),
+    "renew" CHAR(1)
+);
+success!
+timestamp: 2024-03-14T11:05:47.719664
+CREATE TABLE "students"(
+    "id" INTEGER PRIMARY KEY AUTOINCREMENT,
+    "name" CHAR(512),
+    "email" CHAR(512)
+);
+success!
+timestamp: 2024-03-14T11:05:47.752380
+CREATE TABLE "classrooms"(
+    "id" INTEGER PRIMARY KEY AUTOINCREMENT,
+    "name" CHAR(512)
+);
+success!
+timestamp: 2024-03-14T11:05:47.763028
+CREATE TABLE "subjects"(
+    "id" INTEGER PRIMARY KEY AUTOINCREMENT,
+    "name" CHAR(512)
+);
+success!
+timestamp: 2024-03-14T11:05:47.770902
+CREATE TABLE "attendance"(
+    "id" INTEGER PRIMARY KEY AUTOINCREMENT,
+    "student_id" INTEGER REFERENCES "students" ("id") ON DELETE CASCADE ON UPDATE CASCADE  ,
+    "classroom_id" INTEGER REFERENCES "classrooms" ("id") ON DELETE CASCADE ON UPDATE CASCADE  ,
+    "subject_id" INTEGER REFERENCES "subjects" ("id") ON DELETE CASCADE ON UPDATE CASCADE  ,
+    "attendance_date" DATE,
+    "status" CHAR(512)
+);
+success!
+timestamp: 2024-03-15T23:30:22.927271
+CREATE TABLE "auth_user"(
+    "id" SERIAL PRIMARY KEY,
+    "first_name" VARCHAR(128),
+    "last_name" VARCHAR(128),
+    "email" VARCHAR(512),
+    "password" VARCHAR(512),
+    "registration_key" VARCHAR(512),
+    "reset_password_key" VARCHAR(512),
+    "registration_id" VARCHAR(512)
+);
+success!
+timestamp: 2024-03-15T23:30:23.056705
+CREATE TABLE "auth_group"(
+    "id" SERIAL PRIMARY KEY,
+    "role" VARCHAR(512),
+    "description" TEXT
+);
+success!
+timestamp: 2024-03-15T23:30:23.073303
+CREATE TABLE "auth_membership"(
+    "id" SERIAL PRIMARY KEY,
+    "user_id" INTEGER REFERENCES "auth_user" ("id") ON DELETE CASCADE ON UPDATE CASCADE  ,
+    "group_id" INTEGER REFERENCES "auth_group" ("id") ON DELETE CASCADE ON UPDATE CASCADE  
+);
+success!
+timestamp: 2024-03-15T23:30:23.098568
+CREATE TABLE "auth_permission"(
+    "id" SERIAL PRIMARY KEY,
+    "group_id" INTEGER REFERENCES "auth_group" ("id") ON DELETE CASCADE ON UPDATE CASCADE  ,
+    "name" VARCHAR(512),
+    "table_name" VARCHAR(512),
+    "record_id" INTEGER
+);
+success!
+timestamp: 2024-03-15T23:30:23.115313
+CREATE TABLE "auth_event"(
+    "id" SERIAL PRIMARY KEY,
+    "time_stamp" TIMESTAMP,
+    "client_ip" VARCHAR(512),
+    "user_id" INTEGER REFERENCES "auth_user" ("id") ON DELETE CASCADE ON UPDATE CASCADE  ,
+    "origin" VARCHAR(512),
+    "description" TEXT
+);
+success!
+timestamp: 2024-03-15T23:30:23.131882
+CREATE TABLE "auth_cas"(
+    "id" SERIAL PRIMARY KEY,
+    "user_id" INTEGER REFERENCES "auth_user" ("id") ON DELETE CASCADE ON UPDATE CASCADE  ,
+    "created_on" TIMESTAMP,
+    "service" VARCHAR(512),
+    "ticket" VARCHAR(512),
+    "renew" CHAR(1)
+);
+success!
+timestamp: 2024-03-15T23:30:23.152754
+CREATE TABLE "students"(
+    "id" SERIAL PRIMARY KEY,
+    "name" VARCHAR(512),
+    "email" VARCHAR(512)
+);
+timestamp: 2024-03-15T23:41:23.108390
+CREATE TABLE "students"(
+    "id" SERIAL PRIMARY KEY,
+    "name" VARCHAR(512),
+    "email" VARCHAR(512)
+);
+timestamp: 2024-03-15T23:45:22.264463
+CREATE TABLE "students"(
+    "id" SERIAL PRIMARY KEY,
+    "name" VARCHAR(512),
+    "email" VARCHAR(512)
+);
+success!
+timestamp: 2024-03-15T23:45:22.299882
+CREATE TABLE "classrooms"(
+    "id" SERIAL PRIMARY KEY,
+    "name" VARCHAR(512)
+);
+success!
+timestamp: 2024-03-15T23:45:22.316697
+CREATE TABLE "subjects"(
+    "id" SERIAL PRIMARY KEY,
+    "name" VARCHAR(512)
+);
+success!
+timestamp: 2024-03-15T23:45:22.339997
+CREATE TABLE "attendance"(
+    "id" SERIAL PRIMARY KEY,
+    "student_id" INTEGER REFERENCES "students" ("id") ON DELETE CASCADE ON UPDATE CASCADE  ,
+    "classroom_id" INTEGER REFERENCES "classrooms" ("id") ON DELETE CASCADE ON UPDATE CASCADE  ,
+    "subject_id" INTEGER REFERENCES "subjects" ("id") ON DELETE CASCADE ON UPDATE CASCADE  ,
+    "attendance_date" TIMESTAMP,
+    "status" VARCHAR(512)
+);
+success!
+timestamp: 2024-03-17T21:12:49.663148
+CREATE TABLE "auth_group"(
+    "id" SERIAL PRIMARY KEY,
+    "role" VARCHAR(512),
+    "description" TEXT
+);
+timestamp: 2024-03-17T21:17:35.342251
+CREATE TABLE "auth_group"(
+    "id" SERIAL PRIMARY KEY,
+    "role" VARCHAR(512),
+    "description" TEXT
+);
+timestamp: 2024-03-17T21:20:30.043100
+CREATE TABLE "auth_group"(
+    "id" SERIAL PRIMARY KEY,
+    "role" VARCHAR(512),
+    "description" TEXT
+);
+timestamp: 2024-03-17T21:20:33.937654
+CREATE TABLE "auth_group"(
+    "id" SERIAL PRIMARY KEY,
+    "role" VARCHAR(512),
+    "description" TEXT
+);
+timestamp: 2024-03-17T21:22:58.449580
+CREATE TABLE "auth_group"(
+    "id" SERIAL PRIMARY KEY,
+    "role" VARCHAR(512),
+    "description" TEXT
+);
+success!
+timestamp: 2024-03-17T22:38:12.275712
+CREATE TABLE "auth_user"(
+    "id" SERIAL PRIMARY KEY,
+    "first_name" VARCHAR(128),
+    "last_name" VARCHAR(128),
+    "email" VARCHAR(512),
+    "password" VARCHAR(512),
+    "registration_key" VARCHAR(512),
+    "reset_password_key" VARCHAR(512),
+    "registration_id" VARCHAR(512)
+);
+success!
+timestamp: 2024-03-17T22:38:12.346400
+CREATE TABLE "auth_group"(
+    "id" SERIAL PRIMARY KEY,
+    "role" VARCHAR(512),
+    "description" TEXT
+);
+success!
+timestamp: 2024-03-17T22:38:12.377254
+CREATE TABLE "auth_membership"(
+    "id" SERIAL PRIMARY KEY,
+    "user_id" INTEGER REFERENCES "auth_user" ("id") ON DELETE CASCADE ON UPDATE CASCADE  ,
+    "group_id" INTEGER REFERENCES "auth_group" ("id") ON DELETE CASCADE ON UPDATE CASCADE  
+);
+success!
+timestamp: 2024-03-17T22:38:12.400128
+CREATE TABLE "auth_permission"(
+    "id" SERIAL PRIMARY KEY,
+    "group_id" INTEGER REFERENCES "auth_group" ("id") ON DELETE CASCADE ON UPDATE CASCADE  ,
+    "name" VARCHAR(512),
+    "table_name" VARCHAR(512),
+    "record_id" INTEGER
+);
+success!
+timestamp: 2024-03-17T22:38:12.427253
+CREATE TABLE "auth_event"(
+    "id" SERIAL PRIMARY KEY,
+    "time_stamp" TIMESTAMP,
+    "client_ip" VARCHAR(512),
+    "user_id" INTEGER REFERENCES "auth_user" ("id") ON DELETE CASCADE ON UPDATE CASCADE  ,
+    "origin" VARCHAR(512),
+    "description" TEXT
+);
+success!
+timestamp: 2024-03-17T22:38:12.452555
+CREATE TABLE "auth_cas"(
+    "id" SERIAL PRIMARY KEY,
+    "user_id" INTEGER REFERENCES "auth_user" ("id") ON DELETE CASCADE ON UPDATE CASCADE  ,
+    "created_on" TIMESTAMP,
+    "service" VARCHAR(512),
+    "ticket" VARCHAR(512),
+    "renew" CHAR(1)
+);
+success!
+timestamp: 2024-03-17T22:38:12.478184
+CREATE TABLE "students"(
+    "id" SERIAL PRIMARY KEY,
+    "name" VARCHAR(512),
+    "email" VARCHAR(512)
+);
+success!
+timestamp: 2024-03-17T22:38:12.517097
+CREATE TABLE "classrooms"(
+    "id" SERIAL PRIMARY KEY,
+    "name" VARCHAR(512)
+);
+success!
+timestamp: 2024-03-17T22:38:12.539876
+CREATE TABLE "subjects"(
+    "id" SERIAL PRIMARY KEY,
+    "name" VARCHAR(512)
+);
+success!
+timestamp: 2024-03-17T22:38:12.568491
+CREATE TABLE "attendance"(
+    "id" SERIAL PRIMARY KEY,
+    "student_id" INTEGER REFERENCES "students" ("id") ON DELETE CASCADE ON UPDATE CASCADE  ,
+    "classroom_id" INTEGER REFERENCES "classrooms" ("id") ON DELETE CASCADE ON UPDATE CASCADE  ,
+    "subject_id" INTEGER REFERENCES "subjects" ("id") ON DELETE CASCADE ON UPDATE CASCADE  ,
+    "attendance_date" TIMESTAMP,
+    "status" VARCHAR(512)
+);
+success!
+timestamp: 2024-03-18T03:17:14.575237
+ALTER TABLE "attendance" DROP COLUMN "attendance_date";
+success!

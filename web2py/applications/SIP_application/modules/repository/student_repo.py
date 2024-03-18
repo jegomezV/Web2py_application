@@ -13,13 +13,13 @@ class StudentRepository:
         """
         self.db = db
 
-    def get_all_students(self) -> List[dict]:
+    def get_all_students(self):
         """
         Retrieves all students from the 'students' collection.
 
         :return: A list of dictionaries representing the students.
         """
-        return self.db.students.select()
+        return self.db(self.db.students).select()
 
     def get_student_by_id(self, student_id: int) -> Optional[dict]:
         """

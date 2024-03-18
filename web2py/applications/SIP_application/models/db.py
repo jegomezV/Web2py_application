@@ -182,17 +182,6 @@ if 'attendance' not in db.tables:
         Field('student_id', 'reference students'),
         Field('classroom_id', 'reference classrooms'),
         Field('subject_id', 'reference subjects'),
-        Field('attendance_date', 'datetime'),
         Field('status', 'string'),
         migrate=True
     )
-
-def assign_student_to_subject_and_classroom(student_id, subject_id, classroom_id, now):
-    db.attendance.insert(
-        student_id=student_id,
-        classroom_id=classroom_id,
-        subject_id=subject_id,
-        attendance_date=now,
-        status='Attended'
-    )
-    db.commit()
