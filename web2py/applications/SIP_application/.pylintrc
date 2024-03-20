@@ -1,0 +1,2 @@
+[GLOBAL]
+good-names=request,response,session,db

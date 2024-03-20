@@ -1,6 +1,10 @@
-from typing import Dict
+from typing import Dict, Any
+from ...models.classroom_model import Classrooms
 
 class Singleton(type):
+    """
+    Singleton class to ensure that a class has only one instance.
+    """
     _instances = {}
     def __call__(cls, *args, **kwargs):
         if cls not in cls._instances:
@@ -9,25 +13,24 @@ class Singleton(type):
 
 class ClassroomFactory(metaclass=Singleton):
     """
-    A factory class for creating materias.
+    A factory class for creating classrooms.
 
     Attributes:
         db: A database connection object.
     """
     _cache = {}
 
-    def create_classroom(self, name: str, description: str) -> Dict[str, str]:
+    def create_classroom(self, classroom_data: Dict[str, Any]) -> Classrooms:
         """
-        The function to create a materia.
+        The function to create a classroom.
 
         Parameters:
-            name (str): The name of the materia.
-            description (str): The description of the materia.
+            classroom_data (Dict[str, Any]): The data of the classroom.
 
         Returns:
-            dict: A dictionary containing the name and description of the materia.
+            Classrooms: An instance of the Classrooms model.
         """
-        # Here you can add any additional logic you need for creating a materia
+        name = classroom_data['name']
         if name not in self._cache:
-            self._cache[name] = {"name": name, "description": description}
+            self._cache[name] = Classrooms(name)
         return self._cache[name]

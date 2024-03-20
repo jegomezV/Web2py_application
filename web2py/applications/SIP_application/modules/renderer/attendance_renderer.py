@@ -1,31 +1,60 @@
-import logging
-from gluon import XML
+#attendance renderer
+from gluon.html import TABLE, TR, TH, TD, SELECT, OPTION, INPUT
 
 class Renderer:
+    """Class for rendering attendance data."""
     def __init__(self):
-        # Configura el logging
-        logging.basicConfig(filename='app.log', level=logging.DEBUG)
-        self.logger = logging.getLogger('sampleLogger')
-
+        pass
 
     def render_attendance(self, data):
-        self.logger.debug('Starting render_attendance')
+        """
+        Render attendance data into a HTML table.
 
-        html = '<table style="width: 100%; table-layout: auto; border-collapse: separate; border-spacing: 2em;">\n'
-        html += '<tr><th>Student</th><th>Subject</th><th>Classroom</th><th>Attendance</th></tr>\n'
+        Args:
+            data (list): A list of dictionaries containing student, subject, and classroom data.
+
+        Returns:
+            gluon.html.TABLE: A TABLE object containing the rendered attendance data.
+        """
+        rows = []
         for row in data:
-            self.logger.debug(f'Rendering row for student {row["student"]["name"]}')
-            html += '<tr>'
-            html += f'<td>{row["student"]["name"]}</td>'
-            html += f'<td>{row["subject"]["name"]}</td>'
-            html += f'<td>{row["classroom"]["name"]}</td>'
-            html += f'<td><select name="attendance-{row["student"]["name"]}" class="attendance-select" data-id="{row["student"]["name"]}">'
-            html += '<option value="" selected>Seleccionar</option>'
-            html += '<option value="attended">Asistió</option>'
-            html += '<option value="absent">Ausente</option>'
-            html += '</select></td>'
-            html += '</tr>\n'
+            student_id = row["student"].get("id")
+            if student_id is None:
+                raise KeyError("No 'id' in 'student'")
 
-        self.logger.debug('Finished render_attendance')
-        html += '</table>'
-        return XML(html)
+            subject_id = row["subject"].get("id")
+            if subject_id is None:
+                raise KeyError("No 'id' in 'subject'")
+
+            classroom_id = row["classroom"].get("id")
+            if classroom_id is None:
+                raise KeyError("No 'id' in 'classroom'")
+
+            select = SELECT(OPTION('Select', _value="", _selected="selected"),
+                            OPTION('Attended', _value="attended"),
+                            OPTION('Absent', _value="absent"),
+                            _name=f'attendance-{student_id}',
+                            _class="attendance-select",
+                            _data_student_id=student_id,
+                            _data_subject_id=subject_id,
+                            _data_classroom_id=classroom_id)
+
+            date_input = INPUT(_type='date', _name=f'date-{student_id}', _class="attendance-date")
+            rows.append(TR(TD(row["student"]["name"]),
+                        TD(row["subject"]["name"]),
+                        TD(row["classroom"]["name"]),
+                        TD(date_input),
+                        TD(select)))
+
+        table = TABLE(
+            *rows,
+            _style=(
+                "width: 100%; "
+                "table-layout: auto; "
+                "border-collapse: separate; "
+                "border-spacing: 2em;"
+            ),
+            _class="attendance-table"
+        )
+
+        return table

@@ -1,10 +1,12 @@
 #attendance repository
 from typing import Optional, Dict
 from gluon import HTTP
+from datetime import datetime
 
 class AttendanceRepository:
     """
-    AttendanceRepository is a class that provides methods to interact with the 'attendance' collection in the database.
+    AttendanceRepository is a class that provides methods
+    to interact with the 'attendance' collection in the database.
     """
 
     def __init__(self, db):
@@ -13,6 +15,7 @@ class AttendanceRepository:
         """
         self.db = db
 
+
     def get_all_attendance_repo(self):
         """
         Retrieves all attendance records from the 'attendance' collection.
@@ -20,6 +23,7 @@ class AttendanceRepository:
         :return: A list of dictionaries representing the attendance records.
         """
         return self.db(self.db.attendance).select()
+
 
     def get_attendance_by_id_repo(self, attendance_id: int) -> Optional[dict]:
         """
@@ -34,51 +38,56 @@ class AttendanceRepository:
             raise ValueError(f"No attendance record found with id {attendance_id}")
         return attendance
 
-    def update_attendance_repo(self, db, student_name: str, subject_name: str, classroom_name: str, attendance_status: str) -> Optional[dict]:
-        """
-        Inserts a new attendance record in the 'attendance' collection.
 
-        :param student_name: A string representing the student's name.
-        :param subject_name: A string representing the subject's name.
-        :param classroom_name: A string representing the classroom's name.
+    def update_attendance_repo(
+    self,
+    student_id,
+    classroom_id,
+    subject_id,
+    attendance_date,
+    attendance_status
+    ):
+        """
+        Updates an attendance record in the 'attendance' collection.
+
+        :param student_id: An integer representing the student's ID.
+        :param classroom_id: An integer representing the classroom's ID.
+        :param subject_id: An integer representing the subject's ID.
+        :param attendance_date: A date object representing the attendance date.
         :param attendance_status: A string representing the attendance status.
-        :return: A dictionary representing the inserted attendance record if successful, None otherwise.
-        :raises ValueError: If any of the parameters are empty.
+        :return: None
         """
-        if not student_name or not subject_name or not classroom_name or not attendance_status:
-            raise ValueError("All parameters are required")
+        try:
+            # Get the names from the database
+            student_query = self.db(self.db.students.id == student_id)
+            student = student_query.select(self.db.students.name).first()
+            if student is None:
+                print(f"No student found with ID {student_id}")
+                return
+            student_name = student.name
 
-        # Get the IDs of the student, subject, and classroom
-        student = db(db.students.name == student_name).select().first()
-        if student is None:
-            raise ValueError(f"No student found with name {student_name}")
-        student_id = student.id
+            classroom_query = self.db(self.db.classrooms.id == classroom_id)
+            classroom = classroom_query.select(self.db.classrooms.name).first()
+            if classroom is None:
+                print(f"No classroom found with ID {classroom_id}")
+                return
+            classroom_name = classroom.name
 
-        subject = db(db.subjects.name == subject_name).select().first()
-        if subject is None:
-            raise ValueError(f"No subject found with name {subject_name}")
-        subject_id = subject.id
+            subject_query = self.db(self.db.subjects.id == subject_id)
+            subject = subject_query.select(self.db.subjects.name).first()
+            if subject is None:
+                print(f"No subject found with ID {subject_id}")
+                return
+            subject_name = subject.name
 
-        classroom = db(db.classrooms.name == classroom_name).select().first()
-        if classroom is None:
-            raise ValueError(f"No classroom found with name {classroom_name}")
-        classroom_id = classroom.id
-
-        # Insert a new record in the 'attendance' table
-        attendance_id = db.attendance.insert(
-            student_id=student_id,
-            subject_id=subject_id,
-            classroom_id=classroom_id,
-            status=attendance_status
-        )
-
-        return db.attendance(attendance_id)
-
-    def delete_attendance_repo(self, attendance_id: int) -> bool:
-        """
-        Deletes an attendance record from the 'attendance' collection.
-
-        :param attendance_id: An integer representing the attendance record's ID.
-        :return: True if the deletion was successful, False otherwise.
-        """
-        return self.db.attendance(attendance_id).delete_record()
+            # Insert the attendance data into the attendance table
+            self.db.attendance.insert(
+                student_name=student_name,
+                classroom_name=classroom_name,
+                subject_name=subject_name,
+                attendance_date=attendance_date,
+                status=attendance_status
+            )
+            self.db.commit()
+        except (TypeError, ValueError) as e:
+            print(f"Error updating attendance: {e}")

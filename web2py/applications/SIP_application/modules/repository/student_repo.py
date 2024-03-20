@@ -3,7 +3,8 @@ from gluon import HTTP
 
 class StudentRepository:
     """
-    StudentRepository is a class that provides methods to interact with the 'students' collection in the database.
+    StudentRepository is a class that provides methods
+    to interact with the 'students' collection in the database.
     """
 
     def __init__(self, db):
@@ -40,7 +41,8 @@ class StudentRepository:
 
         :param student: A dictionary representing the student.
         :return: A dictionary representing the created student.
-        :raises ValueError: If either 'name' or 'email' is empty or if the email already exists in the database.
+        :raises ValueError: If either 'name' or 'email'
+        is empty or if the email already exists in the database.
         """
         if not student['name'] or not student['email']:
             print("Name or email is empty")
@@ -82,6 +84,6 @@ class StudentRepository:
         :param email: A string representing the student's email.
         :return: True if a student with the given email exists, False otherwise.
         """
-        query = (self.db.students.email == email)
+        query = self.db.students.email == email
         results = self.db(query).select()
         return len(results) > 0

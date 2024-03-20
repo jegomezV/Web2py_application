@@ -1,8 +1,12 @@
-# controllers/students.py
+"""
+This module contains the controller for student operations. 
+It includes functions for viewing and registering students.
+"""
+
 import os
-import json
-from applications.SIP_application.modules.services.business_logic import student_service
 from http import HTTPStatus
+from gluon import HTTP
+from applications.SIP_application.modules.services.business_logic import student_service
 
 def students_view():
     """Returns the path to the students view."""
@@ -16,11 +20,9 @@ def register():
 
         # Print request details for debugging
         print('request.env:', request.env)
-        body = request.body.read()
-        print('request.body.read():', body)
 
-        # Extract student data from the request body
-        student_data = json.loads(body) if body else None
+        # Extract student data from the request vars
+        student_data = request.vars
 
         # Check if student_data is None
         if student_data is None:
@@ -33,8 +35,8 @@ def register():
             raise HTTP(HTTPStatus.BAD_REQUEST, 'Email is required')
 
         # Create student and save in the database
-        student = student_service.create_student(student_data, db)
+        student_service.create_student(student_data, db)
 
         return dict(success=True)
     except Exception as e:
-        raise HTTP(400, str(e))
+        raise HTTP(400, "controller error " + str(e)) from e

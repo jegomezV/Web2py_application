@@ -8,7 +8,9 @@ def create_student(student_data: Dict[str, str], db: Any):
     Create a student object using the factory and insert the student data into the database.
 
     Args:
-        student_data (Dict[str, str]): A dictionary containing student data. It should have 'name' and 'email' keys.
+        student_data (Dict[str, str]):
+        A dictionary containing student data.
+        It should have 'name' and 'email' keys.
         db (Any): Database connection object.
 
     Returns:
@@ -24,4 +26,4 @@ def create_student(student_data: Dict[str, str], db: Any):
 
     except Exception as e:
         # Log the error and return it
-        raise HTTP(400, str(e))
+        raise HTTP(400, "Error service " + str(e)) from e

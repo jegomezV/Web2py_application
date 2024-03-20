@@ -179,9 +179,21 @@ if 'subjects' not in db.tables:
 # Attendance table
 if 'attendance' not in db.tables:
     db.define_table('attendance',
-        Field('student_id', 'reference students'),
-        Field('classroom_id', 'reference classrooms'),
-        Field('subject_id', 'reference subjects'),
+        Field('student_name', 'string'),
+        Field('classroom_name', 'string'),
+        Field('subject_name', 'string'),
+        Field('attendance_date', 'datetime'),
         Field('status', 'string'),
         migrate=True
     )
+
+def assign_student_to_subject_and_classroom(student_id, subject_id, classroom_id, now):
+    db.attendance.insert(
+        student_id=student_id,
+        classroom_id=classroom_id,
+        subject_id=subject_id,
+        attendance_date=now,
+        status='Not stated'
+    )
+    db.commit()
+    

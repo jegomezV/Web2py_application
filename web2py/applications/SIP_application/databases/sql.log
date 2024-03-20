@@ -296,3 +296,19 @@ success!
 timestamp: 2024-03-18T03:17:14.575237
 ALTER TABLE "attendance" DROP COLUMN "attendance_date";
 success!
+timestamp: 2024-03-19T18:36:00.474833
+ALTER TABLE "attendance" ADD "attendance_date" TIMESTAMP;
+success!
+timestamp: 2024-03-20T00:30:08.669937
+ALTER TABLE "attendance" ADD "student_name" VARCHAR(512);
+timestamp: 2024-03-20T00:30:08.723331
+ALTER TABLE "attendance" ADD "classroom_name" VARCHAR(512);
+timestamp: 2024-03-20T00:30:08.725476
+ALTER TABLE "attendance" ADD "subject_name" VARCHAR(512);
+timestamp: 2024-03-20T00:30:08.728122
+ALTER TABLE "attendance" DROP COLUMN "student_id";
+timestamp: 2024-03-20T00:30:08.775546
+ALTER TABLE "attendance" DROP COLUMN "classroom_id";
+timestamp: 2024-03-20T00:30:08.778893
+ALTER TABLE "attendance" DROP COLUMN "subject_id";
+success!

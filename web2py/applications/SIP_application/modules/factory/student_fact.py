@@ -1,4 +1,4 @@
-from typing import Dict
+from ...models.student_model import Student
 
 class StudentFactory:
     """
@@ -7,8 +7,7 @@ class StudentFactory:
     Attributes:
         db: A database connection object.
     """
-
-    def create_student(self, name: str, email: str) -> Dict[str, str]:
+    def create_student(self, name: str, email: str) -> dict:
         """
         The function to create a student.
 
@@ -19,5 +18,7 @@ class StudentFactory:
         Returns:
             dict: A dictionary containing the name and email of the student.
         """
+
         # Here you can add any additional logic you need for creating a student
-        return {"name": name, "email": email}
+        student = Student(name, email)
+        return {"name": student.name, "email": student.email}

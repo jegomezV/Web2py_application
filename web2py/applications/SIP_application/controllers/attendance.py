@@ -1,27 +1,41 @@
-#attendance controller
-import json
+"""
+This module contains the controller for attendance operations. 
+It includes functions for showing, creating and updating attendance records.
+"""
+
+from http import HTTPStatus
+from gluon import HTTP
+from datetime import datetime
 from applications.SIP_application.modules.repository.student_repo import StudentRepository
 from applications.SIP_application.modules.renderer.attendance_renderer import Renderer
 from applications.SIP_application.modules.repository.attendance_repo import AttendanceRepository
 
-def attendance():
-    # Crea una instancia de StudentRepository
+def show_attendance():
+    """
+    This function retrieves all students, subjects, and classrooms from the database.
+    It then prepares the data for the Renderer and returns the rendered attendance table.
+    """
+    # Create an instance of StudentRepository
     student_repository = StudentRepository(db)
 
-    # Obtén los datos de los estudiantes, materias y salones de la base de datos.
+    # Get the data of the students, subjects, and classrooms from the database.
     students = student_repository.get_all_students()
-    subjects = db(db.subjects).select()  # Obtiene todas las materias directamente de la base de datos
-    classrooms = db(db.classrooms).select()  # Obtiene todos los salones directamente de la base de datos
 
-    # Prepara los datos para el Renderer.
+    # Get all the subjects directly from the database
+    subjects = db(db.subjects).select()
+
+    # Get all the classrooms directly from the database
+    classrooms = db(db.classrooms).select()
+
+    # Prepare the data for the Renderer.
     data = []
     for student in students:
         for subject in subjects:
             for room in classrooms:
                 data.append({
-                    "student": {"name": student.name},
-                    "subject": {"name": subject.name},
-                    "classroom": {"name": room.name},
+                    "student": {"id": student.id, "name": student.name},
+                    "subject": {"id": subject.id, "name": subject.name},
+                    "classroom": {"id": room.id, "name": room.name},
                 })
 
     renderer = Renderer()
@@ -29,32 +43,85 @@ def attendance():
 
     return dict(attendance_table=attendance_table)
 
-def show_attendance():
-    attendance_table = attendance()
-    return dict(attendance_table=attendance_table)
+def create_attendance():
+    """
+    This function creates an attendance record. It gets the attendance status, student id, 
+    subject id, classroom id, and attendance date from the POST data. It checks if all required 
+    data is present, converts the attendance date to a datetime object, and then stores the 
+    attendance data in the database.
+    """
+    # Get the attendance status, student id, subject id, classroom id,
+    # and attendance date from the POST data
+    attendance_status = request.vars.attendance_status
+    student_id = request.vars.student_id
+    subject_id = request.vars.subject_id
+    classroom_id = request.vars.classroom_id
+    attendance_date = request.vars.attendance_date
+
+    # Check if all required data is present
+    if not all([attendance_status, student_id, subject_id, classroom_id, attendance_date]):
+        return response.json(dict(success=False, message="Missing required data"))
+
+    # Convert the attendance date to a datetime object
+    attendance_date = datetime.strptime(attendance_date, '%Y-%m-%d')
+
+    # Instantiate AttendanceRepository
+    attendance_repo = AttendanceRepository(db)
+
+    # Call update_attendance_repo method
+    attendance_repo.update_attendance_repo(
+        student_id,
+        classroom_id,
+        subject_id,
+        attendance_date,
+        attendance_status
+    )
+
+    return response.json(dict(success=True, message="Attendance data successfully stored"))
 
 def update_attendance():
-    # Recibe los datos de la solicitud
-    data = request.body.read()
-    data = json.loads(data) if data else None
+    """
+    This function updates an attendance record. It checks if the request method is POST, 
+    extracts the attendance data from the request vars, validates the attendance data, 
+    and then updates the attendance data in the database.
+    """
+    try:
+        if request.env.request_method != 'POST':
+            raise HTTP(HTTPStatus.METHOD_NOT_ALLOWED.value)
 
-    # Comprueba si data es None
-    if data is None:
-        raise HTTP(400, "No data provided")
+        # Extract attendance data from the request vars
+        attendance_data = request.vars
 
-    student_name = data.get('student')
-    subject_name = data.get('subject')
-    classroom_name = data.get('classroom')
-    attendance_status = data.get('attendance')
+        # Check if attendance_data is None or empty
+        if not attendance_data:
+            raise HTTP(HTTPStatus.BAD_REQUEST.value, 'Attendance data not provided or empty')
 
-    # Comprueba si alguno de los datos necesarios es None
-    if None in [student_name, subject_name, classroom_name, attendance_status]:
-        return dict(success=False, message="Missing data")
+        # Validate attendance data
+        if 'student_id' not in attendance_data or not attendance_data['student_id']:
+            raise HTTP(HTTPStatus.BAD_REQUEST.value, 'Student ID is required')
+        if 'subject_id' not in attendance_data or not attendance_data['subject_id']:
+            raise HTTP(HTTPStatus.BAD_REQUEST.value, 'Subject ID is required')
+        if 'classroom_id' not in attendance_data or not attendance_data['classroom_id']:
+            raise HTTP(HTTPStatus.BAD_REQUEST.value, 'Classroom ID is required')
+        if 'attendance' not in attendance_data or not attendance_data['attendance']:
+            raise HTTP(HTTPStatus.BAD_REQUEST.value, 'Attendance status is required')
+        if 'attendance_date' not in attendance_data or not attendance_data['attendance_date']:
+            raise HTTP(HTTPStatus.BAD_REQUEST.value, 'Attendance date is required')
 
-    # Crea una instancia de AttendanceRepository
-    attendance_repository = AttendanceRepository(db)
+        # Create an instance of AttendanceRepository
+        attendance_repository = AttendanceRepository(db)
 
-    # Inserta un nuevo registro de asistencia en la base de datos
-    success = attendance_repository.update_attendance_repo(db, student_name, subject_name, classroom_name, attendance_status)
+        # Update the attendance record in the database
+        success = attendance_repository.update_attendance_repo(
+            db, 
+            attendance_data['student_id'], 
+            attendance_data['subject_id'], 
+            attendance_data['classroom_id'], 
+            attendance_data['attendance_date'], 
+            attendance_data['attendance']
+        )
 
-    return dict(success=success)
+        # Return success status as JSON
+        response.json = dict(success=success)
+    except Exception as e:
+        raise HTTP(HTTPStatus.BAD_REQUEST.value, str(e)) from e

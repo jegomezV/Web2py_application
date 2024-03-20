@@ -1,4 +1,10 @@
+from typing import Dict
+from ...models.subjects_model import Subjects
+
 class Singleton(type):
+    """
+    Singleton class to ensure that a class has only one instance.
+    """
     _instances = {}
     def __call__(cls, *args, **kwargs):
         if cls not in cls._instances:
@@ -14,18 +20,17 @@ class SubjectFactory(metaclass=Singleton):
     """
     _cache = {}
 
-    def create_subject(self, name: str, description: str) -> Dict[str, str]:
+    def create_subject(self, subject_data: Dict[str, Any]) -> Subjects:
         """
         The function to create a materia.
 
         Parameters:
-            name (str): The name of the materia.
-            description (str): The description of the materia.
+            subject_data (Dict[str, Any]): The data of the materia.
 
         Returns:
-            dict: A dictionary containing the name and description of the materia.
+            Subjects: An instance of the Subjects model.
         """
-        # Here you can add any additional logic you need for creating a materia
+        name = subject_data['name']
         if name not in self._cache:
-            self._cache[name] = {"name": name, "description": description}
+            self._cache[name] = Subjects(name)
         return self._cache[name]
