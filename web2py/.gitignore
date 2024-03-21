@@ -60,3 +60,4 @@ welcome.w2p
 __init__.py
 routes.example.py
 .env
+node_modules/
