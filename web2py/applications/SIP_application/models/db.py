@@ -159,41 +159,29 @@ if 'students' not in db.tables:
     db.define_table('students',
         Field('name', 'string', requires=IS_NOT_EMPTY()),
         Field('email', 'string', requires=[IS_EMAIL(), IS_NOT_IN_DB(db, 'students.email')]),
-        migrate=True
+        migrate=False
     )
 
 # Classrooms table
 if 'classrooms' not in db.tables:
     db.define_table('classrooms',
         Field('name', 'string', requires=IS_NOT_EMPTY()),
-        migrate=True
+        migrate=False
     )
 
 # Subjects table
 if 'subjects' not in db.tables:
     db.define_table('subjects',
         Field('name', 'string', requires=IS_NOT_EMPTY()),
-        migrate=True
+        migrate=False
     )
 
-# Attendance table
 if 'attendance' not in db.tables:
     db.define_table('attendance',
-        Field('student_name', 'string'),
-        Field('classroom_name', 'string'),
-        Field('subject_name', 'string'),
+        Field('student_id', 'integer', requires=IS_IN_DB(db, 'students.id')),  # reference to students table
+        Field('classroom_id', 'integer', requires=IS_IN_DB(db, 'classrooms.id')),  # reference to classrooms table
+        Field('subject_id', 'integer', requires=IS_IN_DB(db, 'subjects.id')),  # reference to subjects table
         Field('attendance_date', 'datetime'),
         Field('status', 'string'),
-        migrate=True
+        migrate=False
     )
-
-def assign_student_to_subject_and_classroom(student_id, subject_id, classroom_id, now):
-    db.attendance.insert(
-        student_id=student_id,
-        classroom_id=classroom_id,
-        subject_id=subject_id,
-        attendance_date=now,
-        status='Not stated'
-    )
-    db.commit()
-    
