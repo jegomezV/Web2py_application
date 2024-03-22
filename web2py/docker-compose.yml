@@ -1,20 +1,26 @@
-version: '3'
+version: '3.1'
+
 services:
-  web:
-    build: .
+  db:
+    image: postgres:latest
+    environment:
+      POSTGRES_USER: jegomez
+      POSTGRES_PASSWORD: Kuroneco-1
+      POSTGRES_DB: sip_db
     ports:
+      - "5432:5432"
+
+  web:
+    image: web2py/web2py
+    build: .
+    ports: 
       - "8000:8000"
-    volumes:
-      - .:/app
+    command: ["./entrypoint.sh"]
     depends_on:
       - db
     environment:
-      DATABASE_URL: postgresql://jegomez:Kuroneco-1@db:5432/school_management
-  db:
-    image: postgres
-    ports:
-      - "5432:5432"
-    environment:
-      POSTGRES_DB: school_management
+      WEB2PY_CONFIG: production
       POSTGRES_USER: jegomez
       POSTGRES_PASSWORD: Kuroneco-1
+      POSTGRES_DB: sip_db
+      APP_PASSWORD: root
