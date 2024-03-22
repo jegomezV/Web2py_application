@@ -43,10 +43,10 @@ RUN pip3 install -r requirements.txt
 EXPOSE 8000
 
 # Copy entrypoint script into the image
-COPY ./entrypoint.sh /app/entrypoint.sh
+COPY ./entrypoint.sh ./entrypoint.sh
 
 # Run entrypoint.sh when the container launches
-ENTRYPOINT ["/app/entrypoint.sh"]
+ENTRYPOINT ["entrypoint.sh"]
 
 # Run web2py.py when the container launches
 CMD ["python3", "web2py.py"]

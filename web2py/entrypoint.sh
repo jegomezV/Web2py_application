@@ -2,7 +2,6 @@
 
 # Wait for Postgres to become available
 until PGPASSWORD="$POSTGRES_PASSWORD" psql -h "192.168.1.17" -U "$POSTGRES_USER" -d "$POSTGRES_DB" -c '\q'; do
-    echo "Postgres is unavailable - sleeping"
     sleep 1
 done
 
