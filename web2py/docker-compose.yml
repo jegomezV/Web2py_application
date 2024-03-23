@@ -14,7 +14,8 @@ services:
     image: web2py/web2py
     build: .
     ports: 
-      - "8000:8000"
+      - "8001:8000"
+    command:  ["./entrypoint.sh"]
     depends_on:
       - db
     environment:
