@@ -14,10 +14,10 @@ def students_view():
 
 def register():
     """Registers a new student."""
-    try:
-        if request.env.request_method != 'POST':
-            raise HTTP(HTTPStatus.METHOD_NOT_ALLOWED)
+    if request.env.request_method != 'POST':
+        raise HTTP(HTTPStatus.METHOD_NOT_ALLOWED)
 
+    try:
         # Print request details for debugging
         print('request.env:', request.env)
 

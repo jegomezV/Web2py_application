@@ -1,7 +1,7 @@
 #!/bin/sh
 
 # Wait for Postgres to become available
-until PGPASSWORD="$POSTGRES_PASSWORD" psql -h  -U "$POSTGRES_USER" -d "$POSTGRES_DB" -c '\q'; do
+until PGPASSWORD="$POSTGRES_PASSWORD" psql -h db -U "$POSTGRES_USER" -d "$POSTGRES_DB" -c '\q'; do
     sleep 1
 done
 
@@ -11,4 +11,5 @@ alembic upgrade head
 
 # Cambia al directorio de web2py e inicia la aplicación
 cd /app
-exec python3 web2py.py -a "root"
+echo "Join app"
+exec python web2py.py --nogui -a admin -i 0.0.0.0

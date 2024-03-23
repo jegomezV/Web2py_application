@@ -31,7 +31,7 @@ RUN apt-get update && apt-get install -y \
 WORKDIR /app
 
 # Add the current directory contents into the container at /app
-ADD . /app
+COPY . /app
 
 # Install pip
 RUN apt-get install -y python3-pip
@@ -39,16 +39,14 @@ RUN apt-get install -y python3-pip
 # Install any needed packages specified in requirements.txt
 RUN pip3 install -r requirements.txt
 
-COPY --from=build /app/client /app/applications/SIP_application/client
-
 # Make port 8000 available to the world outside this container
 EXPOSE 8000
 
 # Copy entrypoint script into the image
 COPY ./entrypoint.sh /app/entrypoint.sh
 
+
+RUN chmod +x entrypoint.sh
+
 # Run entrypoint.sh when the container launches
 ENTRYPOINT ["/app/entrypoint.sh"]
-
-# Run web2py.py when the container launches
-    CMD ["python3", "web2py.py"]

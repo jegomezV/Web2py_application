@@ -1,3 +1,4 @@
+from gluon.http import HTTP
 import applications.SIP_application.controllers.students as students
 import unittest
 from unittest.mock import Mock, patch
@@ -7,6 +8,7 @@ class TestStudentsController(unittest.TestCase):
     def setUp(self):
         self.request = Mock()
         students.request = self.request
+        students.db = Mock()  # Añade esta línea si 'db' es una variable global
 
     @patch('applications.SIP_application.modules.services.business_logic.student_service.create_student')
     def test_register_student_success(self, mock_create_student):
