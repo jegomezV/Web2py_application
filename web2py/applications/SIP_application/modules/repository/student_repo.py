@@ -44,6 +44,8 @@ class StudentRepository:
         :raises ValueError: If either 'name' or 'email'
         is empty or if the email already exists in the database.
         """
+        
+        print("JOIN REPOOOOOO")
         if not student['name'] or not student['email']:
             print("Name or email is empty")
             raise ValueError("Both name and email are required")
@@ -52,6 +54,7 @@ class StudentRepository:
         if self.student_exists(student['email']):
             raise HTTP(400, "A student with this email already exists")
 
+        print("sale del repo")
         return self.db.students.insert(name=student['name'], email=student['email'])
 
     def update_student(self, student_id: int, name: str, email: str) -> Optional[dict]:

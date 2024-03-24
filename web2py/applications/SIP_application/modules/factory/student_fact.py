@@ -19,6 +19,9 @@ class StudentFactory:
             dict: A dictionary containing the name and email of the student.
         """
 
+        print("FACTORYYYYYYY")
         # Here you can add any additional logic you need for creating a student
         student = Student(name, email)
+        print(student.name)
+        print(student.email)
         return {"name": student.name, "email": student.email}

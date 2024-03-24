@@ -23,12 +23,10 @@ export class StudentController {
     const student = this.factory.create(name, email);
 
     // Register the student using the repository
-    const response = await this.repository.registerStudent(student);
-
-    // If the registration was successful, return the student
-    if (response.ok) {
+    try {
+      await this.repository.registerStudent(student);
       return student;
-    } else {
+    } catch (error) {
       // If the registration was not successful, throw an error
       throw new Error('The user has already been created'); // Assume the error details include a "message" property
     }

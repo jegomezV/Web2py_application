@@ -6,21 +6,30 @@ import { StudentModel } from '../models/StudentModel';
 // Define the StudentRepository class
 export class StudentRepository {
   // Method to register a student
-  async registerStudent(student: StudentModel) {
-    // Send a POST request to the server to register the student
-    const response = await fetch(
-      'http://127.0.0.1:8000/SIP_application/students/register',
-      {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
+  async registerStudent(student: StudentModel): Promise<Response> {
+    try {
+      console.log("ENTROO");
+      const response = await fetch(
+        'http://127.0.0.1:8000/SIP_application/default/register_student',
+        {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(student),
+          credentials: 'include',
         },
-        // Convert the student object to a JSON string
-        body: JSON.stringify(student),
-      },
-    );
-
-    // Return the response from the server
-    return response;
+      );
+  
+      // Check if the request was successful
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+  
+      return response;
+    } catch (error) {
+      console.error('There was an error with the fetch operation: ', error);
+      throw error;  // Re-throwing the error so it can be caught and handled by the caller
+    }
   }
 }

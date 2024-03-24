@@ -7,7 +7,7 @@ from http import HTTPStatus
 from gluon import HTTP
 from datetime import datetime
 from applications.SIP_application.modules.repository.student_repo import StudentRepository
-from applications.SIP_application.modules.renderer.attendance_renderer import Renderer
+from renderer.attendance_renderer import Renderer
 from applications.SIP_application.modules.repository.attendance_repo import AttendanceRepository
 
 def show_attendance():
@@ -40,6 +40,7 @@ def show_attendance():
 
     renderer = Renderer()
     attendance_table = renderer.render_attendance(data)
+    response.view = 'show_attendance.html'
 
     return dict(attendance_table=attendance_table)
 

@@ -58,6 +58,7 @@ class AttendanceRepository:
         :return: None
         """
         try:
+            print("REPOOOOOO2")
             # Get the names from the database
             student_query = self.db(self.db.students.id == student_id)
             student = student_query.select(self.db.students.name).first()
@@ -66,6 +67,7 @@ class AttendanceRepository:
                 return
             student_name = student.name
 
+            print("REPOOOOOO1")
             classroom_query = self.db(self.db.classrooms.id == classroom_id)
             classroom = classroom_query.select(self.db.classrooms.name).first()
             if classroom is None:
@@ -80,6 +82,7 @@ class AttendanceRepository:
                 return
             subject_name = subject.name
 
+            print("REPOOOOOO")
             # Insert the attendance data into the attendance table
             self.db.attendance.insert(
                 student_id=student_id,
