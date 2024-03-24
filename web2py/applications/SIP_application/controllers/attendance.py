@@ -10,6 +10,8 @@ from applications.SIP_application.modules.repository.student_repo import Student
 from renderer.attendance_renderer import Renderer
 from applications.SIP_application.modules.repository.attendance_repo import AttendanceRepository
 
+from gluon.html import XML
+
 def show_attendance():
     """
     This function retrieves all students, subjects, and classrooms from the database.
@@ -17,6 +19,8 @@ def show_attendance():
     """
     # Create an instance of StudentRepository
     student_repository = StudentRepository(db)
+
+    response.view = 'show_attendance.html'
 
     # Get the data of the students, subjects, and classrooms from the database.
     students = student_repository.get_all_students()
@@ -40,7 +44,6 @@ def show_attendance():
 
     renderer = Renderer()
     attendance_table = renderer.render_attendance(data)
-    response.view = 'show_attendance.html'
 
     return dict(attendance_table=attendance_table)
 
@@ -114,7 +117,6 @@ def update_attendance():
 
         # Update the attendance record in the database
         success = attendance_repository.update_attendance_repo(
-            db, 
             attendance_data['student_id'], 
             attendance_data['subject_id'], 
             attendance_data['classroom_id'], 
@@ -123,6 +125,7 @@ def update_attendance():
         )
 
         # Return success status as JSON
-        response.json = dict(success=success)
+        return response.json({'success': success})
     except Exception as e:
-        raise HTTP(HTTPStatus.BAD_REQUEST.value, str(e)) from e
+        return response.json({'success': False, 'error': str(e)})
+    
