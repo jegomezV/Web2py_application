@@ -20,8 +20,6 @@ def show_attendance():
     # Create an instance of StudentRepository
     student_repository = StudentRepository(db)
 
-    response.view = 'show_attendance.html'
-
     # Get the data of the students, subjects, and classrooms from the database.
     students = student_repository.get_all_students()
 
@@ -128,5 +126,3 @@ def update_attendance():
         return response.json({'success': success})
     except Exception as e:
         return response.json({'success': False, 'error': str(e)})
-    
-    testeo
