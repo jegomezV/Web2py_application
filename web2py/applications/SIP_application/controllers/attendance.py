@@ -129,3 +129,4 @@ def update_attendance():
     except Exception as e:
         return response.json({'success': False, 'error': str(e)})
     
+    testeo
